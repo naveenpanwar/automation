@@ -15,30 +15,47 @@ for row in csv_reader:
 
 inputpdf = PdfFileReader(open(pdf_file, "rb"))
 total = 1
+renamed = 1
 skipped = 1
+left = 1
 
-for i in range(inputpdf.numPages):
+for i in range(0, inputpdf.numPages, 2):
     output = PdfFileWriter()
     page = inputpdf.getPage(i)
+    next_page = inputpdf.getPage(i+1)
     text = page.extractText()
     CONST = "Name of the student\n:"
-    start = text.find(CONST) + len(CONST)+2
-    end = text.find("\n", start)
-    student_name = text[start:end]
-    school_num = ""
-    for row in students:
-        if student_name in row:
-            print(total, row[0], row[1])
-            school_num = row[0]
-            total+=1
-            break
     output.addPage(page)
-    if school_num == "":
-        with open("skipped_"+str(skipped)+".pdf","wb") as outputStream:
-            output.write(outputStream)
-            skipped+=1
-    else:
-        with open(school_num+".pdf", "wb") as outputStream:
-            output.write(outputStream)
+    output.addPage(next_page)
 
-print("Total: Renamed:"+str(total-1)+" Not Renamed:"+str(skipped-1))
+    if text.find(CONST) == -1:
+        with open("new_data/left_"+str(left)+".pdf","wb") as outputStream:
+            output.write(outputStream)
+            print("CONTINUE")
+        left+=1
+    else:
+        start = text.find(CONST) + len(CONST)+3
+        end = text.find("\n", start)
+        student_name = text[start:end]
+        school_num = ""
+        if student_name == "":
+            with open("new_data/left_"+str(left)+".pdf","wb") as outputStream:
+                output.write(outputStream)
+                print("CONTINUE NAME NOT FOUND")
+            left+=1
+        else:
+            for row in students:
+                if student_name in row:
+                    school_num = row[0]
+            print(total, school_num, student_name)
+            if school_num == "":
+                with open("new_data/skipped_"+str(skipped)+".pdf","wb") as outputStream:
+                    output.write(outputStream)
+                    skipped+=1
+            else:
+                with open("new_data/"+school_num+".pdf", "wb") as outputStream:
+                    output.write(outputStream)
+                    renamed+=1
+    total+=1
+
+print("Total: "+str(total-1)+" Renamed:"+str(renamed)+" Not Renamed:"+str(skipped-1)+" Left: "+str(left))

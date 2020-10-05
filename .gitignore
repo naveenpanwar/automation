@@ -132,3 +132,4 @@ dmypy.json
 # Manually Added
 *.pdf
 *.csv
+*.zip

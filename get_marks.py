@@ -13,8 +13,8 @@ for i in range(inputpdf.numPages):
     output = PdfFileWriter()
     page = inputpdf.getPage(i)
     text = page.extractText()
-    CONST = "School No."
-    start = text.find(CONST) + len(CONST)+3
+    CONST = "School No.:"
+    start = text.find(CONST) + len(CONST)+9
     end = text.find("\n", start)
     school_number = text[start:end]
     print(school_number)
