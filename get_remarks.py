@@ -29,6 +29,7 @@ for i in range(0, inputpdf.numPages, 2):
     output.addPage(next_page)
 
     if text.find(CONST) == -1:
+        print(text)
         with open("new_data/left_"+str(left)+".pdf","wb") as outputStream:
             output.write(outputStream)
             print("CONTINUE")

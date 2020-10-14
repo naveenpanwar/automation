@@ -1,6 +1,9 @@
 from PIL import Image, ImageFont, ImageDraw
-import os
+import os, sys
 import csv
+
+file_name = sys.argv[1]
+cwd = os.getcwd()
 
 def make_name(img_name, name, class_name):
     img = Image.open("students/"+img_name)
@@ -15,12 +18,14 @@ def make_name(img_name, name, class_name):
     output = ImageDraw.Draw(layer)
     w, h = output.textsize(name, font)
     output.multiline_text(((width-w)/2,height+10), name, fill=(0, 0, 0), font=font, align="right")
-    if "IX" in class_name:
-        layer.save("students_output_IX/"+img_name)
-    elif "XI" in class_name:
-        layer.save("students_output_XI/"+img_name)
+    path = os.path.join(cwd, class_name)
+    try:
+        os.mkdir(path)
+    except OSError as error:
+        pass
+    layer.save(class_name+"/"+img_name)
 
-names = open("9_11.csv")
+names = open(file_name)
 students = []
 count = 0
 

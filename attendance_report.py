@@ -34,4 +34,5 @@ for row in csv_reader:
             except ValueError:
                 continue
 
+print("Rows Scanned : "+str(row_num))
 pp.pprint(attendance_report)
